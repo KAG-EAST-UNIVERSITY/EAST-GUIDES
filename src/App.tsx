@@ -494,7 +494,11 @@ export default function App() {
           </div>
           <div className="flex gap-2 whitespace-nowrap pb-1 md:pb-0">
             {PDFS.map((doc, i) => (
-              <button key={i} className="flex items-center gap-2 bg-white/80 hover:bg-white text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border border-white/60 shadow-sm backdrop-blur-md">
+              <button 
+                key={i} 
+                onClick={() => alert(`The document "${doc.name}" is currently being updated and will be available for download soon.`)}
+                className="flex items-center gap-2 bg-white/80 hover:bg-white text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border border-white/60 shadow-sm backdrop-blur-md cursor-pointer"
+              >
                 <Download className="w-3 h-3 text-east-blue" />
                 {doc.name}
               </button>
