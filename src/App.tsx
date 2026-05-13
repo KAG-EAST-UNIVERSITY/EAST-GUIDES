@@ -10,6 +10,7 @@ import {
 // --- DATA ---
 const SECTIONS = [
   { id: 'start', title: 'The Digital Front Door', icon: <Globe className="w-5 h-5" /> },
+  { id: 'videos', title: 'Video Training Vault', icon: <MonitorPlay className="w-5 h-5" /> },
   { id: 'email', title: 'Official Email', icon: <Mail className="w-5 h-5" /> },
   { id: 'lms', title: 'Mastering Moodle LMS', icon: <BookOpen className="w-5 h-5" /> },
   { id: 'seb', title: 'Safe Exam Browser', icon: <ShieldCheck className="w-5 h-5" /> },
@@ -347,6 +348,84 @@ export default function App() {
               </div>
 
               <QuoteCard quote="The portal is our village square. Everything happens here, comrade." emoji="🛖" />
+            </motion.div>
+          </section>
+
+          {/* SEC: Videos */}
+          <section id="videos" className="py-16 border-t border-slate-200/50 scroll-mt-20">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white flex items-center justify-center shadow-lg transform rotate-3">
+                    <span className="text-2xl"><AliveEmoji emoji="🎥" /></span>
+                 </div>
+                <h2 className="text-3xl md:text-4xl font-display font-black text-slate-800">
+                  Video Training Vault
+                </h2>
+              </div>
+              <p className="text-lg text-slate-600 mb-8 font-medium italic">
+                "Kindly watch these step-by-step guides to ensure a smooth journey this semester." 🎓✨
+              </p>
+
+              <div className="grid gap-6">
+                {/* Embedded Video */}
+                <div className="bg-white/80 backdrop-blur-xl p-4 rounded-[2.5rem] shadow-xl border border-white overflow-hidden group">
+                  <div className="aspect-video w-full bg-slate-900 rounded-[1.8rem] overflow-hidden relative shadow-inner">
+                     <iframe 
+                        src="https://drive.google.com/file/d/1H6blCFajEYmEpKJZo16VTKVOX8olZK2j/preview" 
+                        className="absolute inset-0 w-full h-full border-0"
+                        allow="autoplay"
+                        title="KAG EAST Orientation Video"
+                     ></iframe>
+                  </div>
+                  <div className="p-6">
+                     <h3 className="text-xl font-black text-east-navy mb-2 flex items-center gap-2">
+                       <GraduationCap className="w-5 h-5 text-east-gold" /> Master Orientation Guide
+                     </h3>
+                     <p className="text-slate-500 text-sm font-medium">Your complete roadmap to the KAG EAST digital experience.</p>
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {[
+                    { 
+                      title: "Email & Portal Login", 
+                      desc: "How to access student email & register units.", 
+                      url: "https://rb.gy/rx5hq9",
+                      icon: <Mail className="w-5 h-5" />,
+                      color: "from-blue-500 to-indigo-600"
+                    },
+                    { 
+                      title: "LMS & Online Classes", 
+                      desc: "Mastering Moodle & BigBlueButton classes.", 
+                      url: "https://rebrand.ly/wym00kj",
+                      icon: <BookOpen className="w-5 h-5" />,
+                      color: "from-purple-500 to-pink-600"
+                    }
+                  ].map((video, idx) => (
+                    <motion.a
+                      key={idx}
+                      href={video.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      whileHover={{ y: -5 }}
+                      className="bg-white border border-slate-100 p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-east-blue/5 transition-all flex flex-col gap-4 group"
+                    >
+                      <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${video.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
+                        {video.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-black text-slate-800 group-hover:text-east-blue transition-colors">{video.title}</h4>
+                        <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">{video.desc}</p>
+                      </div>
+                      <div className="mt-auto pt-4 flex items-center gap-2 text-east-blue font-black text-[10px] uppercase tracking-widest">
+                        Watch Video <ExternalLink className="w-3 h-3" />
+                      </div>
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
+
+              <QuoteCard quote="Kindly take time to go through these carefully. Knowledge is the first step to transformation!" emoji="📚" />
             </motion.div>
           </section>
 
