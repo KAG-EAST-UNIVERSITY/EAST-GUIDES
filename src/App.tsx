@@ -20,7 +20,7 @@ const SECTIONS = [
 const PDFS = [
   { name: 'Accessing LMS Materials.pdf', size: '1.2 MB' },
   { name: 'Safe Exam Browser Training.pdf', size: '2.5 MB' },
-  { name: 'Complete Manual.pdf', size: '4.8 MB' }
+  { name: 'Complete LMS Student Manual.pdf', size: '4.8 MB' }
 ];
 
 // --- COMPONENTS ---
@@ -135,11 +135,14 @@ export default function App() {
     const btn = document.getElementById(`btn-${name.replace(/\s+/g, '-')}`);
     if (btn) {
       const originalText = btn.innerHTML;
-      btn.innerHTML = `<span class="animate-spin inline-block w-4 h-4 border-2 border-east-blue border-t-transparent rounded-full mr-2"></span> Extracting...`;
+      btn.innerHTML = `<span class="animate-spin inline-block w-4 h-4 border-2 border-east-blue border-t-transparent rounded-full mr-2"></span> Opening...`;
+      
+      // Attempt to open the file from the public/manuals folder
       setTimeout(() => {
         btn.innerHTML = originalText;
-        alert(`Survival Guide "${name}" generated and ready for your offline reading. Comrade power! 🚀`);
-      }, 1500);
+        const fileUrl = `./manuals/${name}`;
+        window.open(fileUrl, '_blank');
+      }, 800);
     }
   };
 
