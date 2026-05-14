@@ -894,8 +894,8 @@ export default function App() {
                           </p>
                           <p className="text-xs text-slate-500 font-medium">{person.location}</p>
                         </div>
-                        <a href={`tel:${person.phone}`} className="flex items-center gap-2 bg-slate-100 text-east-navy px-3 py-2 rounded-xl text-sm font-bold hover:bg-east-navy hover:text-white transition-all">
-                          <Phone className="w-3 h-3" /> Call
+                        <a href={`tel:${person.phone}`} className="flex items-center gap-2 bg-slate-100 text-east-navy px-3 py-2 rounded-xl text-sm font-bold hover:bg-east-navy hover:text-white transition-all whitespace-nowrap">
+                          <Phone className="w-3 h-3" /> {person.phone}
                         </a>
                       </li>
                     ))}
