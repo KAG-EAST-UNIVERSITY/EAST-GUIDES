@@ -130,7 +130,8 @@ function CollapsibleStep({ step, title, children, defaultOpen = false }: { step:
 export default function App() {
   const [activeSection, setActiveSection] = useState('start');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [faqs, setFaqs] = useState<any[]>(FAQS);
+  const [faqs, setFaqs] = useState<any[]>([]);
+  const [videos, setVideos] = useState<any[]>([]);
   const [announcement, setAnnouncement] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -139,10 +140,17 @@ export default function App() {
     async function fetchData() {
       try {
         const faqData = await client.fetch(`*[_type == "faq"] | order(order asc)`);
+        const videoData = await client.fetch(`*[_type == "video"] | order(order asc)`);
         const announceData = await client.fetch(`*[_type == "announcement" && isActive == true][0]`);
         
         if (faqData && faqData.length > 0) {
           setFaqs(faqData.map((f: any) => ({ q: f.question, a: f.answer })));
+        } else {
+          setFaqs(FAQS); // Fallback to hardcoded if database is empty
+        }
+
+        if (videoData && videoData.length > 0) {
+          setVideos(videoData);
         }
 
         if (announceData) {
@@ -150,6 +158,7 @@ export default function App() {
         }
       } catch (error) {
         console.error("Sanity fetch error:", error);
+        setFaqs(FAQS); // Fallback on error
       } finally {
         setLoading(false);
       }
@@ -429,62 +438,113 @@ export default function App() {
               </p>
 
               <div className="grid gap-6">
-                {/* Embedded Video */}
-                <div className="bg-white/80 backdrop-blur-xl p-4 rounded-[2.5rem] shadow-xl border border-white overflow-hidden group">
-                  <div className="aspect-video w-full bg-slate-900 rounded-[1.8rem] overflow-hidden relative shadow-inner">
-                     <iframe 
-                        src="https://drive.google.com/file/d/1H6blCFajEYmEpKJZo16VTKVOX8olZK2j/preview" 
-                        className="absolute inset-0 w-full h-full border-0"
-                        allow="autoplay"
-                        title="KAG EAST Orientation Video"
-                     ></iframe>
-                  </div>
-                  <div className="p-6">
-                     <h3 className="text-xl font-black text-east-navy mb-2 flex items-center gap-2">
-                       <GraduationCap className="w-5 h-5 text-east-gold" /> Master Orientation Guide
-                     </h3>
-                     <p className="text-slate-500 text-sm font-medium">Your complete roadmap to the KAG EAST digital experience.</p>
-                  </div>
-                </div>
+                {/* Dynamic Videos from Admin Hub */}
+                {(!loading && videos.length > 0) ? (
+                  <>
+                    {/* Featured/Embedded Video (the first one marked as isEmbedded) */}
+                    {videos.filter(v => v.isEmbedded).slice(0, 1).map((video, idx) => (
+                      <div key={idx} className="bg-white/80 backdrop-blur-xl p-4 rounded-[2.5rem] shadow-xl border border-white overflow-hidden group">
+                        <div className="aspect-video w-full bg-slate-900 rounded-[1.8rem] overflow-hidden relative shadow-inner">
+                           <iframe 
+                              src={video.url} 
+                              className="absolute inset-0 w-full h-full border-0"
+                              allow="autoplay"
+                              title={video.title}
+                           ></iframe>
+                        </div>
+                        <div className="p-6">
+                           <h3 className="text-xl font-black text-east-navy mb-2 flex items-center gap-2">
+                             <GraduationCap className="w-5 h-5 text-east-gold" /> {video.title}
+                           </h3>
+                           <p className="text-slate-500 text-sm font-medium">{video.description}</p>
+                        </div>
+                      </div>
+                    ))}
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {[
-                    { 
-                      title: "Email & Portal Login", 
-                      desc: "How to access student email & register units.", 
-                      url: "https://rb.gy/rx5hq9",
-                      icon: <Mail className="w-5 h-5" />,
-                      color: "from-blue-500 to-indigo-600"
-                    },
-                    { 
-                      title: "LMS & Online Classes", 
-                      desc: "Mastering Moodle & BigBlueButton classes.", 
-                      url: "https://rebrand.ly/wym00kj",
-                      icon: <BookOpen className="w-5 h-5" />,
-                      color: "from-purple-500 to-pink-600"
-                    }
-                  ].map((video, idx) => (
-                    <motion.a
-                      key={idx}
-                      href={video.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      whileHover={{ y: -5 }}
-                      className="bg-white border border-slate-100 p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-east-blue/5 transition-all flex flex-col gap-4 group"
-                    >
-                      <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${video.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
-                        {video.icon}
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {videos.filter(v => !v.isEmbedded || videos.filter(ev => ev.isEmbedded).indexOf(v) > 0).map((video, idx) => (
+                        <motion.a
+                          key={idx}
+                          href={video.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          whileHover={{ y: -5 }}
+                          className="bg-white border border-slate-100 p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-east-blue/5 transition-all flex flex-col gap-4 group"
+                        >
+                          <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${idx % 2 === 0 ? 'from-blue-500 to-indigo-600' : 'from-purple-500 to-pink-600'} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
+                            {idx % 2 === 0 ? <Mail className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
+                          </div>
+                          <div>
+                            <h4 className="font-black text-slate-800 group-hover:text-east-blue transition-colors">{video.title}</h4>
+                            <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">{video.description}</p>
+                          </div>
+                          <div className="mt-auto pt-4 flex items-center gap-2 text-east-blue font-black text-[10px] uppercase tracking-widest">
+                            Watch Video <ExternalLink className="w-3 h-3" />
+                          </div>
+                        </motion.a>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Fallback Static Videos */}
+                    <div className="bg-white/80 backdrop-blur-xl p-4 rounded-[2.5rem] shadow-xl border border-white overflow-hidden group">
+                      <div className="aspect-video w-full bg-slate-900 rounded-[1.8rem] overflow-hidden relative shadow-inner">
+                         <iframe 
+                            src="https://drive.google.com/file/d/1H6blCFajEYmEpKJZo16VTKVOX8olZK2j/preview" 
+                            className="absolute inset-0 w-full h-full border-0"
+                            allow="autoplay"
+                            title="KAG EAST Orientation Video"
+                         ></iframe>
                       </div>
-                      <div>
-                        <h4 className="font-black text-slate-800 group-hover:text-east-blue transition-colors">{video.title}</h4>
-                        <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">{video.desc}</p>
+                      <div className="p-6">
+                         <h3 className="text-xl font-black text-east-navy mb-2 flex items-center gap-2">
+                           <GraduationCap className="w-5 h-5 text-east-gold" /> Master Orientation Guide
+                         </h3>
+                         <p className="text-slate-500 text-sm font-medium">Your complete roadmap to the KAG EAST digital experience.</p>
                       </div>
-                      <div className="mt-auto pt-4 flex items-center gap-2 text-east-blue font-black text-[10px] uppercase tracking-widest">
-                        Watch Video <ExternalLink className="w-3 h-3" />
-                      </div>
-                    </motion.a>
-                  ))}
-                </div>
+                    </div>
+
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {[
+                        { 
+                          title: "Email & Portal Login", 
+                          desc: "How to access student email & register units.", 
+                          url: "https://rb.gy/rx5hq9",
+                          icon: <Mail className="w-5 h-5" />,
+                          color: "from-blue-500 to-indigo-600"
+                        },
+                        { 
+                          title: "LMS & Online Classes", 
+                          desc: "Mastering Moodle & BigBlueButton classes.", 
+                          url: "https://rebrand.ly/wym00kj",
+                          icon: <BookOpen className="w-5 h-5" />,
+                          color: "from-purple-500 to-pink-600"
+                        }
+                      ].map((video, idx) => (
+                        <motion.a
+                          key={idx}
+                          href={video.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          whileHover={{ y: -5 }}
+                          className="bg-white border border-slate-100 p-6 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-east-blue/5 transition-all flex flex-col gap-4 group"
+                        >
+                          <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${video.color} text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
+                            {video.icon}
+                          </div>
+                          <div>
+                            <h4 className="font-black text-slate-800 group-hover:text-east-blue transition-colors">{video.title}</h4>
+                            <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">{video.desc}</p>
+                          </div>
+                          <div className="mt-auto pt-4 flex items-center gap-2 text-east-blue font-black text-[10px] uppercase tracking-widest">
+                            Watch Video <ExternalLink className="w-3 h-3" />
+                          </div>
+                        </motion.a>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
               <QuoteCard quote="Kindly take time to go through these carefully. Knowledge is the first step to transformation!" emoji="📚" />
