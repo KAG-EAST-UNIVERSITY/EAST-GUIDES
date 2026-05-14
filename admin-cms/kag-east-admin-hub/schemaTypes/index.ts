@@ -86,4 +86,30 @@ export const faq = defineType({
   ],
 })
 
-export const schemaTypes = [announcement, video, faq]
+export const manual = defineType({
+  name: 'manual',
+  title: 'Survival Kit (Manuals)',
+  type: 'document',
+  fields: [
+    {
+      name: 'name',
+      title: 'File Name',
+      type: 'string',
+      description: 'The exact name of the file in the public/manuals folder (e.g. guide.pdf)',
+    },
+    {
+      name: 'displayName',
+      title: 'Display Name',
+      type: 'string',
+      description: 'The user-friendly title shown on the site.',
+    },
+    {
+      name: 'size',
+      title: 'File Size',
+      type: 'string',
+      description: 'e.g. 1.2 MB',
+    },
+  ],
+})
+
+export const schemaTypes = [announcement, video, faq, manual]

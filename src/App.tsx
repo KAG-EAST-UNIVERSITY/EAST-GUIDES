@@ -132,6 +132,7 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [faqs, setFaqs] = useState<any[]>([]);
   const [videos, setVideos] = useState<any[]>([]);
+  const [manuals, setManuals] = useState<any[]>([]);
   const [announcement, setAnnouncement] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -141,16 +142,23 @@ export default function App() {
       try {
         const faqData = await client.fetch(`*[_type == "faq"] | order(order asc)`);
         const videoData = await client.fetch(`*[_type == "video"] | order(order asc)`);
+        const manualData = await client.fetch(`*[_type == "manual"]`);
         const announceData = await client.fetch(`*[_type == "announcement" && isActive == true][0]`);
         
         if (faqData && faqData.length > 0) {
           setFaqs(faqData.map((f: any) => ({ q: f.question, a: f.answer })));
         } else {
-          setFaqs(FAQS); // Fallback to hardcoded if database is empty
+          setFaqs(FAQS); 
         }
 
         if (videoData && videoData.length > 0) {
           setVideos(videoData);
+        }
+
+        if (manualData && manualData.length > 0) {
+          setManuals(manualData);
+        } else {
+          setManuals(PDFS);
         }
 
         if (announceData) {
@@ -158,7 +166,8 @@ export default function App() {
         }
       } catch (error) {
         console.error("Sanity fetch error:", error);
-        setFaqs(FAQS); // Fallback on error
+        setFaqs(FAQS);
+        setManuals(PDFS);
       } finally {
         setLoading(false);
       }
@@ -972,7 +981,7 @@ export default function App() {
             
             {/* Horizontal Scroll on Mobile, Grid on Desktop */}
             <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-4 pb-8 md:pb-0 snap-x custom-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
-              {PDFS.map((doc, i) => (
+              {manuals.map((doc, i) => (
                 <button 
                   key={i} 
                   id={`btn-${doc.name.replace(/\s+/g, '-')}`}
@@ -984,7 +993,7 @@ export default function App() {
                     <Download className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-bold text-white text-sm leading-tight mb-1">{doc.name}</p>
+                    <p className="font-bold text-white text-sm leading-tight mb-1">{doc.displayName || doc.name}</p>
                     <p className="text-xs text-slate-400 font-medium">{doc.size} {doc.name.split('.').pop()?.toUpperCase()}</p>
                   </div>
                 </button>
