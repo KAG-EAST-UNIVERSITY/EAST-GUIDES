@@ -1,5 +1,6 @@
 import { useState, useEffect, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { client } from './sanityClient';
 import { 
   Laptop, Mail, BookOpen, ShieldCheck, LifeBuoy, 
   Menu, X, ExternalLink, Download, ArrowRight,
@@ -129,6 +130,32 @@ function CollapsibleStep({ step, title, children, defaultOpen = false }: { step:
 export default function App() {
   const [activeSection, setActiveSection] = useState('start');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [faqs, setFaqs] = useState<any[]>(FAQS);
+  const [announcement, setAnnouncement] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch data from Sanity
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const faqData = await client.fetch(`*[_type == "faq"] | order(order asc)`);
+        const announceData = await client.fetch(`*[_type == "announcement" && isActive == true][0]`);
+        
+        if (faqData && faqData.length > 0) {
+          setFaqs(faqData.map((f: any) => ({ q: f.question, a: f.answer })));
+        }
+
+        if (announceData) {
+          setAnnouncement(announceData);
+        }
+      } catch (error) {
+        console.error("Sanity fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
 
   // Smooth scroll
   const scrollTo = (id: string) => {
@@ -723,30 +750,35 @@ export default function App() {
               </p>
               
               {/* THE CLINIC BANNER */}
-              <motion.div 
-                whileHover={{ scale: 1.01 }}
-                className="mb-10 bg-gradient-to-r from-east-navy via-[#1e3f6b] to-east-navy border border-east-gold/30 rounded-3xl p-1 shadow-2xl overflow-hidden relative"
-              >
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNDMsMTQ1LDMzLDAuMTUpIi8+PC9zdmc+')]"></div>
-                <div className="bg-white/5 backdrop-blur-xl rounded-[1.4rem] p-6 md:p-8 relative z-10 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-                  <div className="w-20 h-20 rounded-full bg-east-gold/20 flex items-center justify-center flex-shrink-0 border border-east-gold/30">
-                    <span className="text-4xl"><AliveEmoji emoji="🚨" /></span>
+              {(!loading && announcement) ? (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.01 }}
+                  className="mb-10 bg-gradient-to-r from-east-navy via-[#1e3f6b] to-east-navy border border-east-gold/30 rounded-3xl p-1 shadow-2xl overflow-hidden relative"
+                >
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNDMsMTQ1LDMzLDAuMTUpIi8+PC9zdmc+')]"></div>
+                  <div className="bg-white/5 backdrop-blur-xl rounded-[1.4rem] p-6 md:p-8 relative z-10 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+                    <div className="w-20 h-20 rounded-full bg-east-gold/20 flex items-center justify-center flex-shrink-0 border border-east-gold/30">
+                      <span className="text-4xl"><AliveEmoji emoji="🚨" /></span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="inline-block bg-east-gold text-east-navy text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3">Announcement</div>
+                      <h3 className="text-2xl font-black text-white mb-2">{announcement.title}</h3>
+                      <p className="text-slate-300 text-sm font-medium leading-relaxed max-w-lg">
+                        {announcement.message}
+                      </p>
+                    </div>
+                    {announcement.date && (
+                      <div className="bg-black/40 border border-white/10 rounded-xl p-4 text-center min-w-[140px]">
+                        <p className="text-white font-black text-xl">{announcement.date}</p>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex-1">
-                    <div className="inline-block bg-east-gold text-east-navy text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3">Special Event</div>
-                    <h3 className="text-2xl font-black text-white mb-2">The IT Troubleshooting Clinic</h3>
-                    <p className="text-slate-300 text-sm font-medium leading-relaxed max-w-lg">
-                      Login failed? SEB acting up? Wi-Fi won't connect? This is your window. We will fix it live. Mark your calendar!
-                    </p>
-                  </div>
-                  <div className="bg-black/40 border border-white/10 rounded-xl p-4 text-center min-w-[140px]">
-                    <p className="text-east-gold text-xs font-bold uppercase tracking-wider mb-1">Friday</p>
-                    <p className="text-white font-black text-xl">May 15th</p>
-                    <p className="text-slate-400 text-xs mt-1">11:00 AM - 11:30 AM</p>
-                  </div>
-                </div>
-              </motion.div>
-
+                </motion.div>
+              ) : (loading && (
+                <div className="mb-10 h-32 bg-slate-200 animate-pulse rounded-3xl" />
+              ))}
               <div className="mb-8 p-5 bg-amber-50 border border-amber-200 shadow-sm rounded-2xl flex items-start gap-4">
                 <span className="text-3xl pt-1"><AliveEmoji emoji="🦊" /></span>
                 <div>
@@ -846,7 +878,7 @@ export default function App() {
 
               {/* FAQ ACCORDION */}
               <div className="space-y-4">
-                {FAQS.map((faq, index) => (
+                {faqs.map((faq, index) => (
                   <div key={index}>
                     <CollapsibleStep step={index + 1} title={faq.q}>
                       <p className="text-slate-700 leading-relaxed">{faq.a}</p>
