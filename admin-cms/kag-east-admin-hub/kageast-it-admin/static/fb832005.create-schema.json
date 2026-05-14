@@ -1,0 +1,101 @@
+[
+  {
+    "fields": [
+      {
+        "description": "The heading of the announcement (e.g. IT Troubleshooting Clinic)",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "description": "The detailed information for students.",
+        "name": "message",
+        "type": "text"
+      },
+      {
+        "description": "e.g. Friday, May 15th, 11:00 AM",
+        "name": "date",
+        "type": "string",
+        "title": "Event Date/Time"
+      },
+      {
+        "initialValue": true,
+        "description": "Toggle this on to show the announcement on the live site.",
+        "name": "isActive",
+        "type": "boolean",
+        "title": "Active?"
+      }
+    ],
+    "name": "announcement",
+    "type": "document",
+    "title": "Announcements"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "title": "Short Description"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "Video/Drive URL"
+      },
+      {
+        "description": "Check if this is a Google Drive preview link to embed directly.",
+        "name": "isEmbedded",
+        "type": "boolean",
+        "title": "Is Embedded Video?"
+      }
+    ],
+    "name": "video",
+    "type": "document",
+    "title": "Video Tutorials"
+  },
+  {
+    "fields": [
+      {
+        "name": "question",
+        "type": "string"
+      },
+      {
+        "name": "answer",
+        "type": "text"
+      },
+      {
+        "description": "Lower numbers appear first.",
+        "name": "order",
+        "type": "number",
+        "title": "Display Order"
+      }
+    ],
+    "name": "faq",
+    "type": "document",
+    "title": "FAQs"
+  }
+]

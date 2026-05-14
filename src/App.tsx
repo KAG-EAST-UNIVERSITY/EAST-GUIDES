@@ -383,7 +383,7 @@ export default function App() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
                     { name: 'School Portal', desc: 'Admissions & Fees', url: 'https://portal.east.ac.ke/', icon: '🏛️' },
-                    { name: 'E-Learning (LMS)', desc: 'Your Digital Classroom', url: 'https://lms.east.ac.ke/', icon: '💻' },
+                    { name: 'E-Learning (LMS)', desc: 'Your Digital Classroom', url: 'https://elearning.east.ac.ke/', icon: '💻' },
                     { name: 'E-Library', desc: 'MyLOFT Research', url: 'https://elibrary.east.university/', icon: '📚' },
                     { name: 'ICT Support', desc: 'Get tech rescue', url: 'https://support.east.ac.ke/ostic/open.php', icon: '🛟' }
                   ].map((link, idx) => (
