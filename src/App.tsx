@@ -888,19 +888,18 @@ export default function App() {
                     ].map((person, i) => (
                       <li key={i} className={`flex items-center justify-between p-3 rounded-2xl transition-colors ${person.highlight ? 'bg-east-gold/10 border border-east-gold/20' : 'hover:bg-slate-50 border border-transparent'}`}>
                         <div>
-                          <p className="font-bold text-slate-800 flex items-center gap-2">
+                          <p className="font-bold text-slate-800 flex items-center gap-2 text-base">
                             {person.name} 
-                            {person.highlight && <span className="text-[9px] bg-east-gold text-east-navy px-1.5 py-0.5 rounded uppercase font-black tracking-widest">Lead</span>}
+                            {person.highlight && <span className="text-[10px] bg-east-gold text-east-navy px-2 py-0.5 rounded-full uppercase font-black tracking-widest">Lead Facilitator</span>}
                           </p>
-                          <div className="flex flex-col">
-                            <span className="text-xs text-slate-500 font-medium">{person.location}</span>
-                            <a href={`tel:${person.phone}`} className="text-xs text-east-blue font-bold hover:underline mt-0.5">
-                              {person.phone}
-                            </a>
-                          </div>
+                          <p className="text-xs text-slate-500 font-medium mb-2">{person.location}</p>
+                          <a href={`tel:${person.phone}`} className="inline-flex items-center gap-2 text-east-blue font-black text-sm bg-east-blue/5 px-3 py-1.5 rounded-lg border border-east-blue/10 hover:bg-east-blue hover:text-white transition-all group">
+                            <Phone className="w-3.5 h-3.5 group-hover:animate-bounce" />
+                            {person.phone}
+                          </a>
                         </div>
-                        <a href={`tel:${person.phone}`} className="flex items-center gap-2 bg-east-navy text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-east-blue transition-all shadow-md shadow-east-navy/10">
-                          <Phone className="w-3 h-3" /> Call
+                        <a href={`tel:${person.phone}`} className="hidden sm:flex items-center gap-2 bg-east-navy text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-east-blue transition-all shadow-lg shadow-east-navy/20 whitespace-nowrap">
+                          Call Now
                         </a>
                       </li>
                     ))}
