@@ -42,7 +42,7 @@ const FAQS = [
   },
   {
     q: "Who do I contact for urgent campus IT help?",
-    a: "Reach out to your lead IT facilitators: Dancan & Brian (Kitengela Campus) or Eugene (Buruburu & Online Campus)."
+    a: "Reach out to your lead IT facilitators: Paul (0783510612), Dancan (0700080983), Brian (0792688392) at Kitengela Campus, or Eugene (0115477142) for Buruburu & Online Campus."
   },
   {
     q: "Where can I find my academic results?",
@@ -892,10 +892,15 @@ export default function App() {
                             {person.name} 
                             {person.highlight && <span className="text-[9px] bg-east-gold text-east-navy px-1.5 py-0.5 rounded uppercase font-black tracking-widest">Lead</span>}
                           </p>
-                          <p className="text-xs text-slate-500 font-medium">{person.location}</p>
+                          <div className="flex flex-col">
+                            <span className="text-xs text-slate-500 font-medium">{person.location}</span>
+                            <a href={`tel:${person.phone}`} className="text-xs text-east-blue font-bold hover:underline mt-0.5">
+                              {person.phone}
+                            </a>
+                          </div>
                         </div>
-                        <a href={`tel:${person.phone}`} className="flex items-center gap-2 bg-slate-100 text-east-navy px-3 py-2 rounded-xl text-sm font-bold hover:bg-east-navy hover:text-white transition-all whitespace-nowrap">
-                          <Phone className="w-3 h-3" /> {person.phone}
+                        <a href={`tel:${person.phone}`} className="flex items-center gap-2 bg-east-navy text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-east-blue transition-all shadow-md shadow-east-navy/10">
+                          <Phone className="w-3 h-3" /> Call
                         </a>
                       </li>
                     ))}
