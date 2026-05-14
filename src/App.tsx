@@ -51,9 +51,9 @@ const FAQS = [
 ];
 
 const PDFS = [
-  { name: 'Accessing LMS Materials.pdf', size: '1.2 MB' },
+  { name: 'Access Learning Resources on LMS.pptx', size: '2.4 MB' },
   { name: 'Safe Exam Browser Training.pdf', size: '2.5 MB' },
-  { name: 'Complete LMS Student Manual.pdf', size: '4.8 MB' }
+  { name: 'Accessing LMS for Students.pptx', size: '3.1 MB' }
 ];
 
 // --- COMPONENTS ---
@@ -925,7 +925,7 @@ export default function App() {
                   </div>
                   <div>
                     <p className="font-bold text-white text-sm leading-tight mb-1">{doc.name}</p>
-                    <p className="text-xs text-slate-400 font-medium">{doc.size} PDF</p>
+                    <p className="text-xs text-slate-400 font-medium">{doc.size} {doc.name.split('.').pop()?.toUpperCase()}</p>
                   </div>
                 </button>
               ))}
