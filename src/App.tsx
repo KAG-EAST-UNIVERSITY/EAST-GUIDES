@@ -4,7 +4,7 @@ import {
   Laptop, Mail, BookOpen, ShieldCheck, LifeBuoy, 
   Menu, X, ExternalLink, Download, ArrowRight,
   MonitorPlay, FileText, AlertTriangle, Phone, ChevronDown, Globe, GraduationCap, ChevronRight,
-  Wifi, Zap, Sparkles
+  Wifi, Zap, Sparkles, HelpCircle, MessageSquare
 } from 'lucide-react';
 
 // --- DATA ---
@@ -15,6 +15,38 @@ const SECTIONS = [
   { id: 'lms', title: 'Mastering Moodle LMS', icon: <BookOpen className="w-5 h-5" /> },
   { id: 'seb', title: 'Safe Exam Browser', icon: <ShieldCheck className="w-5 h-5" /> },
   { id: 'support', title: 'IT Support & Helpdesk', icon: <LifeBuoy className="w-5 h-5" /> },
+  { id: 'faq', title: 'FAQ & Knowledge Base', icon: <HelpCircle className="w-5 h-5" /> },
+];
+
+const FAQS = [
+  {
+    q: "How do I log in to the LMS for my classes?",
+    a: "Go to the main website (east.university), click the 'LMS' button, and log in using the username and password provided by the IT Department."
+  },
+  {
+    q: "What is the official student email format?",
+    a: "Your official email is formatted as name1.name2@students.east.ac.ke. You must use this for all official university communication and resources."
+  },
+  {
+    q: "I forgot my password or can't log in. What do I do?",
+    a: "First, search the Official Knowledge Base using the link above. If that doesn't fix it, email ictsupport@east.ac.ke or officially raise a support ticket. Include your student ID and a screenshot of the error!"
+  },
+  {
+    q: "Can I use my phone for online exams?",
+    a: "No. You must use a Windows 11 or macOS laptop/desktop with a working camera. You are required to download and install the Safe Exam Browser (SEB) to take secure exams."
+  },
+  {
+    q: "How do I attend online classes?",
+    a: "Look for the BigBlueButton (BBB) icon inside your LMS course. Click 'Join Session', allow microphone and camera permissions, and you are in!"
+  },
+  {
+    q: "Who do I contact for urgent campus IT help?",
+    a: "Reach out to your lead IT facilitators: Dancan & Brian (Kitengela Campus) or Eugene (Buruburu & Online Campus)."
+  },
+  {
+    q: "Where can I find my academic results?",
+    a: "Academic information and results are hosted on the School Portal at https://kageu.edumaat.net/."
+  }
 ];
 
 const PDFS = [
@@ -771,6 +803,59 @@ export default function App() {
               </div>
 
               <QuoteCard quote="That 'Save Changes' button is your true best friend. Don't ghost it." emoji="👻" />
+            </motion.div>
+          </section>
+
+          {/* SEC 6: FAQ & Knowledge Base */}
+          <section id="faq" className="py-16 border-t border-slate-200/50 scroll-mt-20">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-east-navy to-east-blue text-white flex items-center justify-center shadow-lg transform rotate-3">
+                    <span className="text-2xl"><AliveEmoji emoji="🧠" /></span>
+                 </div>
+                <h2 className="text-3xl md:text-4xl font-display font-black text-slate-800">
+                  FAQ & Knowledge Base
+                </h2>
+              </div>
+              
+              {/* KNOWLEDGE BASE LINK */}
+              <motion.a 
+                href="https://support.east.ac.ke/ostic/kb/index.php" 
+                target="_blank" 
+                rel="noreferrer"
+                whileHover={{ scale: 1.02 }}
+                className="mb-10 block bg-gradient-to-br from-white/80 to-slate-50/80 backdrop-blur-xl border border-east-blue/20 rounded-[2rem] p-8 shadow-xl group transition-all"
+              >
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="w-16 h-16 rounded-2xl bg-east-blue/10 flex items-center justify-center text-east-blue group-hover:bg-east-blue group-hover:text-white transition-all">
+                    <BookOpen className="w-8 h-8" />
+                  </div>
+                  <div className="flex-1 text-center md:text-left">
+                    <h3 className="text-xl font-black text-east-navy mb-1 group-hover:text-east-blue transition-colors">
+                      Search the Official IT Knowledge Base 🧠
+                    </h3>
+                    <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                      90% of your issues (password resets, submission errors) already have step-by-step guides waiting for you here.
+                    </p>
+                  </div>
+                  <div className="bg-east-blue text-white p-3 rounded-full group-hover:translate-x-2 transition-transform">
+                    <ExternalLink className="w-5 h-5" />
+                  </div>
+                </div>
+              </motion.a>
+
+              {/* FAQ ACCORDION */}
+              <div className="space-y-4">
+                {FAQS.map((faq, index) => (
+                  <div key={index}>
+                    <CollapsibleStep step={index + 1} title={faq.q}>
+                      <p className="text-slate-700 leading-relaxed">{faq.a}</p>
+                    </CollapsibleStep>
+                  </div>
+                ))}
+              </div>
+
+              <QuoteCard quote="The answer you seek is often just one click away. Be a digital detective!" emoji="🕵🏾‍♂️" />
             </motion.div>
           </section>
 
